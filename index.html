@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Angle Selector</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(to right, #8b47d4, #001538);
+            margin: 0;
+            color: #fff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        .controls {
+            margin: 15px 0;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        input[type="number"] {
+            width: 80px;
+            padding: 10px;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            font-size: 1em;
+            text-align: center;
+        }
+        input[type="range"] {
+            width: 300px;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 8px;
+            background: #ddd;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.7;
+            transition: opacity .2s;
+        }
+        input[type="range"]:hover {
+            opacity: 1;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #2575fc;
+            cursor: pointer;
+            transition: background .3s;
+        }
+        input[type="range"]::-webkit-slider-thumb:hover {
+            background: #6a11cb;
+        }
+        .radio-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        label {
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 1em;
+        }
+        input[type="radio"] {
+            accent-color: #2575fc;
+            transform: scale(1.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Angle Selector</h1>
+        <div class="controls">
+            <input type="number" id="angleInput" value="0" min="0" max="360">
+        </div>
+        <div class="controls">
+            <input type="range" id="angleSlider" min="0" max="360" value="180">
+        </div>
+        <div class="controls radio-group">
+            <label><input type="radio" name="preset" value="0"> 0°</label>
+            <label><input type="radio" name="preset" value="45"> 45°</label>
+            <label><input type="radio" name="preset" value="60"> 60°</label>
+            <label><input type="radio" name="preset" value="90"> 90°</label>
+            <label><input type="radio" name="preset" value="180"> 180°</label>
+        </div>
+    </div>
+
+    <script>
+        const angleInput = document.getElementById('angleInput');
+        const angleSlider = document.getElementById('angleSlider');
+        const radioButtons = document.querySelectorAll('input[name="preset"]');
+
+        function updateFromInput() {
+            let value = parseInt(angleInput.value, 10);
+            if (isNaN(value) || value < 0) value = 0;
+            if (value > 360) value = 360;
+            angleInput.value = value;
+            angleSlider.value = value;
+            updateRadioButtons(value);
+        }
+
+        function updateFromSlider() {
+            const value = parseInt(angleSlider.value, 10);
+            angleInput.value = value;
+            updateRadioButtons(value);
+        }
+
+        function updateFromRadio() {
+            const checkedRadio = document.querySelector('input[name="preset"]:checked');
+            if (checkedRadio) {
+                const value = parseInt(checkedRadio.value, 10);
+                angleInput.value = value;
+                angleSlider.value = value;
+            }
+        }
+
+        function updateRadioButtons(value) {
+            radioButtons.forEach(button => {
+                button.checked = parseInt(button.value, 10) === value;
+            });
+        }
+
+        angleInput.addEventListener('input', updateFromInput);
+        angleSlider.addEventListener('input', updateFromSlider);
+        radioButtons.forEach(button => button.addEventListener('change', updateFromRadio));
+
+        updateFromInput();
+    </script>
+</body>
+</html>
